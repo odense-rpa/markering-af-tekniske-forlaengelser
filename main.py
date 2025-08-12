@@ -43,7 +43,10 @@ async def populate_queue(workqueue: Workqueue):
             expected_reason = ('Der udbetales sygedagpenge ud over begrænsningen i § 24, '
                              'fordi der ikke er modtaget en afgørelse om forlængelse '
                              'eller ophør af anden årsag')
-            if borger['prolongation']['reasonName'] != expected_reason:
+            
+            # Safe check for prolongation and reasonName
+            prolongation = borger.get('prolongation')
+            if not prolongation or prolongation.get('reasonName') != expected_reason:
                 continue
             
             # Safe handling of tags
