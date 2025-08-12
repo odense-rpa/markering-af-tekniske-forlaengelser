@@ -3,6 +3,7 @@ import logging
 import sys
 from dotenv import load_dotenv
 import os
+import datetime
 
 from automation_server_client import AutomationServer, Workqueue, WorkItemError
 from momentum_client.manager import MomentumClientManager
@@ -88,8 +89,12 @@ async def process_workqueue(workqueue: Workqueue):
  
             try:
                 # Process the item here
-                print(data)
-                pass
+                borger = momentum._borgere_client.hent_borger(data['cpr'])
+                momentum._borgere_client.opret_markering(
+                    borger=borger,
+                    start_dato=datetime.datetime.now().date(),
+                    markeringsnavn="Teknisk forlængelse - sygedagpenge"
+                )
             except WorkItemError as e:
                 # A WorkItemError represents a soft error that indicates the item should be passed to manual processing or a business logic fault
                 logger.error(f"Error processing item: {data}. Error: {e}")
