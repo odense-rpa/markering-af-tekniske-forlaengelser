@@ -5,18 +5,16 @@ from dotenv import load_dotenv
 import os
 import datetime
 
-from automation_server_client import AutomationServer, Workqueue, WorkItemError
+from automation_server_client import AutomationServer, Workqueue, WorkItemError, Credential
 from momentum_client.manager import MomentumClientManager
+from odk_tools.tracking import Tracker
 
 load_dotenv()  # Load environment variables from .env file
 
-momentum = MomentumClientManager(
-    base_url=os.getenv("BASE_URL"),
-    client_id=os.getenv("CLIENT_ID"),
-    client_secret=os.getenv("CLIENT_SECRET"),
-    api_key=os.getenv("API_KEY"),
-    resource=os.getenv("RESOURCE"),
-)
+tracker: Tracker
+momentum: MomentumClientManager
+proces_navn = "Markering af tekniske forlængelser"
+
 
 
 
@@ -98,6 +96,8 @@ async def process_workqueue(workqueue: Workqueue):
                     start_dato=datetime.datetime.now().date(),
                     markeringsnavn="Teknisk forlængelse - sygedagpenge"
                 )
+                tracker.track_task(process_name=proces_navn)
+
             except WorkItemError as e:
                 # A WorkItemError represents a soft error that indicates the item should be passed to manual processing or a business logic fault
                 logger.error(f"Error processing item: {data}. Error: {e}")
@@ -110,6 +110,18 @@ if __name__ == "__main__":
     workqueue = ats.workqueue()
 
     # Initialize external systems for automation here..
+    tracking_credential = Credential.get_credential("Odense SQL Server")
+    tracker = Tracker(
+        username=tracking_credential.username, password=tracking_credential.password
+    )
+
+    momentum = MomentumClientManager(
+    base_url=os.getenv("BASE_URL"),
+    client_id=os.getenv("CLIENT_ID"),
+    client_secret=os.getenv("CLIENT_SECRET"),
+    api_key=os.getenv("API_KEY"),
+    resource=os.getenv("RESOURCE"),
+)
 
     # Queue management
     if "--queue" in sys.argv:
