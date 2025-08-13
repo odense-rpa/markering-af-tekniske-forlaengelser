@@ -20,8 +20,8 @@ proces_navn = "Markering af tekniske forlængelser"
 
 async def populate_queue(workqueue: Workqueue):
     logger = logging.getLogger(__name__)
-
-    logger.info("Hello from populate workqueue!")
+    
+    # Define filters for fetching citizens. Only 6.6: "sygedagpengemodtager"
     filters = [
         {
             "customFilter": "",
@@ -76,7 +76,6 @@ async def populate_queue(workqueue: Workqueue):
         print(f"Error: {e}")
         return
 
-    print("hej")
 
 
 async def process_workqueue(workqueue: Workqueue):
