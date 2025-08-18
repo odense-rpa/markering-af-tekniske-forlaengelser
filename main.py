@@ -34,7 +34,7 @@ async def populate_queue(workqueue: Workqueue):
 
     # Initialize Momentum client manager and Borgere client
     try:
-        borgere = momentum._borgere_client.hent_borgere(filters=filters)
+        borgere = momentum.borgere.hent_borgere(filters=filters)
         
         # Access the actual list of citizens from the 'data' key
         for borger in borgere['data']:
@@ -89,8 +89,8 @@ async def process_workqueue(workqueue: Workqueue):
  
             try:
                 # Process the item here
-                borger = momentum._borgere_client.hent_borger(data['cpr'])
-                momentum._borgere_client.opret_markering(
+                borger = momentum.borgere.hent_borger(data['cpr'])
+                momentum.borgere.opret_markering(
                     borger=borger,
                     start_dato=datetime.datetime.now().date(),
                     markeringsnavn="Teknisk forlængelse - sygedagpenge"
