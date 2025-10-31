@@ -264,7 +264,7 @@ wheels = [
 [[package]]
 name = "momentum-client"
 version = "0.2.2"
-source = { git = "https://github.com/odense-rpa/momentum-client.git#787df923ad934f0cf4155c6657d8cf4cef26c298" }
+source = { git = "https://github.com/odense-rpa/momentum-client.git#c458458ad607d4712f4de107099667f91bef4765" }
 dependencies = [
     { name = "authlib" },
     { name = "certifi" },
